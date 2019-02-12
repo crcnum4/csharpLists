@@ -14,17 +14,23 @@ void freeList(Node*);
 
 int main(void)
 {
-    printf("Hello\n");
-    Node* head = NULL;
-    Node* second = NULL;
-    Node* third = NULL;
+    // printf("Hello\n");
+    Node* list = NULL;
 
-    head = (Node*)malloc(sizeof(Node));
-    second = (Node*)malloc(sizeof(Node));
-    third = (Node*)malloc(sizeof(Node));
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = 5;
+    newNode->next = NULL;
 
-    head->data = 5;
-    head->next = NULL;
+    list = newNode;
+
+    push(3, list);
+    push(12, list);
+    printf("%i\n", pop(list));
+    push(14, list);
+    printf("%i\n", pop(list));
+    printf("%i\n", pop(list));
+    freeList(list);
+
     // head->next = second;
     // head->next->data = 7;
     // head->next->next = third;
@@ -35,7 +41,7 @@ int main(void)
     // third->next = NULL;
     // third->data = 9
     // push(11, head);
-    printf("%i\n", pop(head));
+    // printf("%i\n", pop(head));
     // freeList(head);
 }
 
@@ -43,7 +49,7 @@ void push(int data, Node* head)
 {
     Node* trav = head;
 
-    while(trav->next != NULL)
+    while(trav != NULL && trav->next != NULL )
     {
         trav = trav->next;
     }
@@ -54,6 +60,11 @@ void push(int data, Node* head)
     Node* newNode = (Node*)malloc(sizeof(Node));
     newNode->data = data;
     newNode->next = NULL;
+    if (trav == NULL)
+    {
+        head = newNode;
+        return;
+    }
     trav->next = newNode;
 }
 
@@ -61,6 +72,15 @@ int pop(Node* head)
 {
     Node* trav = head;
 
+    if (trav == NULL) {
+        return -1;
+    }
+
+    if (trav->next == NULL) {
+        int data = trav->data;
+        free(trav);
+        return data;
+    }
     // find the second to last node
     while (trav->next->next != NULL)
     {
@@ -76,6 +96,10 @@ int pop(Node* head)
 void freeList(Node* root)
 {
     Node* trav = root;
+    if (trav == NULL)
+    {
+        return;
+    }
     if (trav->next == NULL)
     {
         free(trav);
